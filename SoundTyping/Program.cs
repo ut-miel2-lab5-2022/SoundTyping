@@ -14,4 +14,43 @@ namespace SoundTyping
             Application.Run(new MainForm());
         }
     }
+
+    public class LabelArray
+    {
+        private Label[] _Labels;
+        private string _Text;
+
+        public readonly int Length;
+        public readonly Control ParentControl;
+        public string Text
+        {
+            get { return _Text; }
+            set
+            {
+                _Text = value;
+                for (int i = 0; i < Math.Min(_Labels.Length, _Text.Length); i++)
+                {
+                    _Labels[i].Text = _Text[i].ToString();
+                }
+            }
+        }
+
+        public LabelArray(int length, Size sizeOne, Control parentControl)
+        {
+            Length = length;
+            ParentControl = parentControl;
+            _Text = "";
+            _Labels = new Label[Length];
+            for (int i = 0; i < Length; i++)
+            {
+                _Labels[i] = new Label();
+                _Labels[i].Size = sizeOne;
+                _Labels[i].Location = new Point(sizeOne.Width * i, 0);
+                _Labels[i].TextAlign = ContentAlignment.MiddleCenter;
+                _Labels[i].Font = new Font("Consolas", sizeOne.Width-1);
+                _Labels[i].Text = "";
+                parentControl.Controls.Add(_Labels[i]);
+            }
+        }
+    }
 }
