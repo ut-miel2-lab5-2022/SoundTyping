@@ -13,6 +13,11 @@ namespace SoundTyping
     public partial class MainForm : Form
     {
         private LabelArray sampleChars;
+        private string[] answers = new string[] {"I believe.", "Hello, World!"};
+        private int rightCount = 0;
+        private int missCountSum = 0;
+        private int clearCountSum = 0;
+        private string answer = "";
 
         public MainForm()
         {
@@ -22,12 +27,45 @@ namespace SoundTyping
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            sampleChars.Text = "ABCDEFGHIJKLMNOPQRSTUV";
+            answer = answers[0];
+            sampleChars.Text = answer;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            sampleChars.Text = "0123456789012345678901";
+            // sampleChars.Text = "012345";
+        }
+
+        private void MainForm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == answer[rightCount])
+            {
+                sampleChars.SetForeColor(Color.Gray, rightCount);
+                sampleChars.SetBackColor(Color.LightGray, rightCount);
+                rightCount++;
+            }
+            else
+            {
+                missCountSum++;
+                labelMissCountValue.Text = missCountSum.ToString();
+            }
+            if (rightCount >= answer.Length)
+            {
+                clearCountSum++;
+                labelClearCountValue.Text = clearCountSum.ToString();
+                ResetGame();
+            };
+        }
+
+        private void ResetGame()
+        {
+            sampleChars.Text = "";
+            sampleChars.SetForeColorAll(SystemColors.ControlText);
+            sampleChars.SetBackColorAll(SystemColors.Window);
+            Random rng = new System.Random();
+            answer = answers[rng.Next(0, 2)];
+            rightCount = 0;
+            sampleChars.Text = answer;
         }
     }
 }

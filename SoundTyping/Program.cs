@@ -28,9 +28,9 @@ namespace SoundTyping
             set
             {
                 _Text = value;
-                for (int i = 0; i < Math.Min(_Labels.Length, _Text.Length); i++)
+                for (int i = 0; i < Length; i++)
                 {
-                    _Labels[i].Text = _Text[i].ToString();
+                    _Labels[i].Text = (i < _Text.Length ? _Text[i].ToString() : " ");
                 }
             }
         }
@@ -50,6 +50,40 @@ namespace SoundTyping
                 _Labels[i].Font = new Font("Consolas", sizeOne.Width-1);
                 _Labels[i].Text = "";
                 parentControl.Controls.Add(_Labels[i]);
+            }
+        }
+
+        public void SetForeColor(Color color, int index)
+        {
+            if (index < 0 || index >= Length)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            _Labels[index].ForeColor = color;
+        }
+
+        public void SetForeColorAll(Color color)
+        {
+            foreach (Label label in _Labels)
+            {
+                label.ForeColor = color;
+            }
+        }
+
+        public void SetBackColor(Color color, int index)
+        {
+            if (index < 0 || index >= Length)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            _Labels[index].BackColor = color;
+        }
+
+        public void SetBackColorAll(Color color)
+        {
+            foreach (Label label in _Labels)
+            {
+                label.BackColor = color;
             }
         }
     }
