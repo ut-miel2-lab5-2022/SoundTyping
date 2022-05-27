@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using NextMidi.MidiPort.Output.Core;
+using NextMidi.MidiPort.Output;
+using NextMidi.DataElement;
 
 namespace SoundTyping
 {
@@ -19,6 +13,10 @@ namespace SoundTyping
         private int clearCountSum = 0;
         private string answer = "";
 
+        private MidiOutPort? port;
+        private int noteCount = 0;
+        private byte[] score = { 59, 55, 57, 59, 62, 60, 60, 64, 62, 62, 67, 66, 67, 62, 59, 55, 57, 59, 60, 62, 64, 62, 60, 59, 57, 59, 55, 54, 55, 57, 50, 54, 57, 60, 59, 57 };
+
         public MainForm()
         {
             InitializeComponent();
@@ -27,13 +25,11 @@ namespace SoundTyping
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            port = new MidiOutPort("Microsoft GS Wavetable Synth");
+            port.Open();
+
             answer = answers[0];
             sampleChars.Text = answer;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // sampleChars.Text = "012345";
         }
 
         private void MainForm_KeyPress(object sender, KeyPressEventArgs e)
@@ -42,6 +38,7 @@ namespace SoundTyping
             {
                 sampleChars.SetForeColor(Color.Gray, rightCount);
                 sampleChars.SetBackColor(Color.LightGray, rightCount);
+                PlayNext();
                 rightCount++;
             }
             else
@@ -66,6 +63,17 @@ namespace SoundTyping
             answer = answers[rng.Next(0, 2)];
             rightCount = 0;
             sampleChars.Text = answer;
+        }
+
+        private void PlayNext()
+        {
+            if (port == null) throw new Exception();
+            byte nprev = score[(noteCount + score.Length - 1) % score.Length];
+            byte n = score[noteCount];
+            port.Send(new NoteOffEvent(nprev));
+            port.Send(new NoteOnEvent(n, 112));
+            noteCount++;
+            noteCount %= score.Length;
         }
     }
 }
