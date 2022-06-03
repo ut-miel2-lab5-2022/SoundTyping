@@ -151,10 +151,10 @@
             // 
             // changeScore
             // 
-            this.changeScore.Enabled = false;
             this.changeScore.Name = "changeScore";
             this.changeScore.Size = new System.Drawing.Size(116, 24);
             this.changeScore.Text = "楽譜を変更 (&S)";
+            this.changeScore.Click += new System.EventHandler(this.changeScore_Click);
             // 
             // resetGame
             // 
@@ -166,6 +166,10 @@
             // wordsFileDialog
             // 
             this.wordsFileDialog.Filter = "単語帳ファイル|*.txt|すべてのファイル|*.*";
+            // 
+            // scoreFileDialog
+            // 
+            this.scoreFileDialog.Filter = "MIDI ファイル|*.mid;*.midi|すべてのファイル|*.*";
             // 
             // labelNextWord
             // 
